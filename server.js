@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
 		
 	});
 	socket.on('send-location', (data) => {
-		socket.to(data.room).emit('recv-location', data.message); 
+		socket.to(data.room).emit('recv-location', { latitude: data.latitude, longitude: data.longitude });
 	});  
 	socket.on('disconnect', () => {
 		const { room, role } = socket;
@@ -89,5 +89,5 @@ io.on('connection', (socket) => {
 
 
 server.listen(3001, () => {
-	console.log('Server is running on port 3000');
+	console.log('Server is running on port 3001');
 });
