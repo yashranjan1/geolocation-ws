@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
 
 		const roomData = roomRoles.get(room);
 
-		if (role === 'mechanic') {
+		if (role === 'service') {
 			if (roomData.mechanic) {
 				console.log('Already a mechanic in the room');
 				return socket.disconnect();
@@ -61,7 +61,10 @@ io.on('connection', (socket) => {
 		
 	});
 	socket.on('send-location', (data) => {
-		socket.to(data.room).emit('recv-location', data.message); 
+		console.log("Recieved coords:", data)
+		data.latitude = data.latitude + Math.random() * 0.001
+		data.longitude = data.longitude + Math.random() * 0.001
+		socket.to(data.room).emit('recv-location', data); 
 	});  
 	socket.on('disconnect', () => {
 		const { room, role } = socket;
@@ -69,8 +72,8 @@ io.on('connection', (socket) => {
 		  const roomData = roomRoles.get(room);
 	
 		  // Remove the user from the room's role
-		  if (role === 'mechanic' && roomData && roomData.mechanic === socket.id) {
-			roomData.mechanic = null;
+		  if (role === 'service' && roomData && roomData.service === socket.id) {
+			roomData.service = null;
 			console.log(`Mechanic left room ${room}`);
 		  } else if (role === 'client' && roomData && roomData.client === socket.id) {
 			roomData.client = null;
@@ -78,7 +81,7 @@ io.on('connection', (socket) => {
 		  }
 	
 		  // Clean up the room entry if empty
-		  if (roomData && !roomData.mechanic && !roomData.client) {
+		  if (roomData && !roomData.service && !roomData.client) {
 			roomRoles.delete(room);
 			console.log(`Room ${room} is now empty and deleted.`);
 		  }
@@ -89,5 +92,5 @@ io.on('connection', (socket) => {
 
 
 server.listen(3001, () => {
-	console.log('Server is running on port 3000');
+	console.log('Server is running on port 3001');
 });
