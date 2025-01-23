@@ -220,8 +220,6 @@ io.on("connection", (socket) => {
 
   socket.on("send-location", (data) => {
     console.log("Received coords:", data);
-    data.latitude += Math.random() * 0.001;
-    data.longitude += Math.random() * 0.001;
     socket.to(data.room).emit("recv-location", data);
   });
 
